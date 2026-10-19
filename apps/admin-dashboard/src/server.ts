@@ -281,6 +281,14 @@ app.get('/', (req: Request, res: Response) => {
 </html>`);
 });
 
+app.post('/webhook', (req: Request, res: Response) => {
+  const signature = req.headers['x-gateway-signature'];
+  console.log('[Admin Dashboard] Received Authoritative Merchant Webhook:', req.body);
+  console.log('[Admin Dashboard] X-Gateway-Signature:', signature);
+  res.status(200).json({ received: true, status: 'PROCESSED' });
+});
+
 app.listen(PORT, () => {
   console.log(`📊 Openbill Admin Dashboard listening on http://localhost:${PORT}`);
 });
+
