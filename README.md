@@ -1,20 +1,40 @@
 # 🏛️ Openbill Pay System
 
-> **Zero-SaaS, Self-Hosted Recurring Bill Collection & Automated Peer-to-Peer Reconciliation Engine**
+> **The Sovereign, Open-Source Alternative to BBPS (Bharat Bill Payment System)**
+> Zero-SaaS, Self-Hosted Recurring Bill Collection & Automated Peer-to-Peer UPI Reconciliation Engine
 
 [![Node Version](https://img.shields.io/badge/Node.js-v20%2B%20LTS-339933?logo=node.js)](https://nodejs.org/)
 [![Database](https://img.shields.io/badge/Database-SQLite3%20WAL-003B57?logo=sqlite)](https://sqlite.org/)
+[![BBPS Alternative](https://img.shields.io/badge/BBPS-Open--Source%20Alternative-orange)](#)
 [![Architecture](https://img.shields.io/badge/Architecture-Zero--Docker%20Monorepo-blueviolet)](#)
 [![Monetary Unit](https://img.shields.io/badge/Monetary%20Engine-64--bit%20Integer%20Paise-emerald)](#)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 | Attribute | Specification |
 | :--- | :--- |
+| **Positioning** | 🇮🇳 Open-Source Alternative to BBPS (Bharat Bill Payment System) |
 | **Status** | 🟢 Active / Production Ready |
 | **License** | [MIT License](LICENSE) |
 | **Stack** | Node.js, SQLite (WAL), Puppeteer (CDP), Baileys Socket |
 | **Monetary Precision** | 64-bit Integer (Paise minor units) |
 | **Runtime** | Bare-Metal Node.js 20+ LTS (Zero Docker) |
+
+---
+
+## 🇮🇳 Why an Open-Source BBPS Alternative?
+
+For small ISPs, schools, SaaS startups, local societies, gyms, and subscription businesses in India, traditional payment gateways and BBPS (Bharat Bill Payment System) aggregators impose severe financial and operational overhead:
+
+| Feature | Centralized BBPS / Payment Gateways | 🏛️ Openbill Pay System (Open-Source BBPS) |
+| :--- | :--- | :--- |
+| **Transaction Fees (MDR)** | **1.8% to 2.5% + 18% GST** on every bill | **0.00% Zero-Fee** (Direct UPI P2P / P2M) |
+| **Payout Settlements** | Delayed **T+1 / T+2** working days | **Instant T+0** (Funds hit bank immediately) |
+| **Customer Notifications** | Expensive third-party SMS/WhatsApp APIs | **Self-Hosted Baileys WhatsApp Socket** |
+| **Data Sovereignty** | Stored on third-party SaaS servers | **100% Self-Hosted** (Local SQLite with WAL) |
+| **Onboarding Friction** | Weeks of merchant KYC & bureaucratic approval | **Run in 2 minutes** via Node.js (`npm run dev`) |
+| **Payment Verification** | Proprietary black-box webhooks | **Deterministic Fractional Slot Invariant Allocator** |
+
+---
 
 ---
 
