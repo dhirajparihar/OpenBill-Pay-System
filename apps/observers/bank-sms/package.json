@@ -1,0 +1,22 @@
+{
+  "name": "@openbill/observer-bank-sms",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@openbill/common": "*",
+    "@openbill/billing-core": "*",
+    "@openbill/database": "*",
+    "puppeteer-core": "^22.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  }
+}

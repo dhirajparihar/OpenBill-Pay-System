@@ -1,0 +1,25 @@
+{
+  "name": "openbill-pay-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sovereign, self-hosted recurring bill collection and automation system",
+  "workspaces": [
+    "apps/*",
+    "apps/observers/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "bootstrap": "npm install && npm run build && npm run db:migrate",
+    "dev": "node apps/control-center/src/index.js",
+    "build": "npm run build --workspaces --if-present",
+    "db:migrate": "npm run build --workspace=@openbill/database",
+    "test": "node apps/billing-core/dist/allocator/slot-allocator.test.js && node apps/consumer-portal/dist/portal.test.js && node apps/observers/bank-sms/dist/bank-sms.test.js && node apps/observers/bank-sms/dist/e2e-integration.test.js && node apps/observers/whatsapp/dist/whatsapp.test.js && node apps/billing-core/dist/webhook/merchant-webhook-notifier.test.js"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
