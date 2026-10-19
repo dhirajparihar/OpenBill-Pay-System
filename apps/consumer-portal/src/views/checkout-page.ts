@@ -19,6 +19,7 @@ export interface CheckoutPageData {
 export function renderCheckoutHtml(data: CheckoutPageData): string {
   const baseRupees = (data.baseAmountPaise / 100).toFixed(2);
   const totalRupees = data.upiLinks.amountFormatted;
+  const [intPart, decPart] = totalRupees.split('.');
   const offsetPaise = data.fractionalOffset;
 
   return `<!DOCTYPE html>
@@ -26,24 +27,25 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Pay ₹${totalRupees} to ${data.merchantName} | Openbill Pay System</title>
+  <title>Pay ₹${totalRupees} · ${data.merchantName}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: #111827;
-      --card-border: #1f2937;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --accent: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --upi-green: #00875a;
-      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --bg: #09090b;
+      --surface: #121215;
+      --surface-elevated: #18191f;
+      --border-subtle: rgba(255, 255, 255, 0.07);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --accent-emerald: #10b981;
+      --accent-emerald-dim: rgba(16, 185, 129, 0.12);
+      --accent-coral: #f43f5e;
+      --accent-coral-dim: rgba(244, 63, 94, 0.12);
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     * {
@@ -54,25 +56,23 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
     }
 
     body {
-      font-family: var(--font);
+      font-family: var(--font-sans);
       background-color: var(--bg);
-      color: var(--text-main);
+      color: var(--text-primary);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
-        radial-gradient(circle at 80% 100%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+      padding: 1.5rem 1rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Container for Desktop Card & Mobile Bottom Sheet */
+    /* Ambient structural surface */
     .portal-wrapper {
       width: 100%;
-      max-width: 440px;
+      max-width: 420px;
       margin: auto;
       display: flex;
       flex-direction: column;
@@ -80,156 +80,158 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
     }
 
     .checkout-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
       width: 100%;
-      padding: 1.75rem;
-      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      padding: 1.75rem 1.75rem 1.5rem 1.75rem;
       position: relative;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
     }
 
-    /* Merchant Branding Header */
+    /* Merchant Header: Confident, calm authority */
     .merchant-header {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .merchant-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
     }
 
     .merchant-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-strong);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 1.2rem;
-      color: #fff;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
     }
 
-    .merchant-info h1 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.2;
+    .merchant-meta h1 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
     }
 
-    .merchant-info .vpa-badge {
+    .merchant-meta .vpa-text {
       font-size: 0.75rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      margin-top: 2px;
+      color: var(--text-tertiary);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      margin-top: 1px;
     }
 
-    .verified-icon {
-      color: #38bdf8;
-      width: 14px;
-      height: 14px;
-      display: inline-block;
-    }
-
-    /* Total Amount Section */
-    .amount-box {
-      text-align: center;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      margin-bottom: 1.25rem;
-    }
-
-    .amount-label {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .amount-val {
-      font-size: 2.25rem;
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -0.03em;
-      margin: 0.25rem 0;
-      display: flex;
-      align-items: baseline;
-      justify-content: center;
-      gap: 2px;
-    }
-
-    .amount-val span.currency {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #94a3b8;
-    }
-
-    .amount-val span.fraction {
-      font-size: 1.6rem;
-      color: #38bdf8;
-    }
-
-    .fraction-note {
-      font-size: 0.72rem;
-      color: #cbd5e1;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      padding: 0.35rem 0.65rem;
-      border-radius: 20px;
-      display: inline-block;
-      margin-top: 0.25rem;
-    }
-
-    /* Timer Pill */
+    /* Tabular Countdown Timer Pill */
     .timer-pill {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: #fbbf24;
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
+      gap: 0.375rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-subtle);
+      padding: 0.3125rem 0.625rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-pill strong {
+      color: var(--text-primary);
       font-weight: 600;
-      margin-bottom: 1.25rem;
     }
 
     .timer-pill.urgent {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: rgba(239, 68, 68, 0.4);
-      color: #f87171;
-      animation: pulse 1s infinite alternate;
+      background: var(--accent-coral-dim);
+      border-color: rgba(244, 63, 94, 0.3);
+      color: var(--accent-coral);
     }
 
-    @keyframes pulse {
-      from { opacity: 0.8; }
-      to { opacity: 1; transform: scale(1.02); }
+    .timer-pill.urgent strong {
+      color: var(--accent-coral);
     }
 
-    /* QR Code Box */
+    /* Amount Presentation: The singular focal hero */
+    .amount-hero {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .amount-caption {
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      margin-bottom: 0.375rem;
+    }
+
+    .amount-val {
+      font-size: clamp(2.5rem, 8vw, 3.125rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .amount-val .currency-symbol {
+      font-size: 0.65em;
+      font-weight: 500;
+      margin-right: 0.1em;
+      color: var(--text-secondary);
+    }
+
+    .amount-val .decimal-part {
+      font-size: 0.65em;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .amount-context {
+      margin-top: 0.625rem;
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .amount-context strong {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Precision Frame QR Code */
     .qr-container {
       background: #ffffff;
-      padding: 1.1rem;
-      border-radius: 18px;
+      padding: 1.125rem;
+      border-radius: 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-      margin: 0 auto 1.25rem auto;
-      max-width: 250px;
+      margin: 0 auto 1.5rem auto;
+      max-width: 230px;
       position: relative;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
     }
 
     .upi-vector-qr {
@@ -238,186 +240,237 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
       display: block;
     }
 
-    .qr-footer-tag {
-      margin-top: 0.4rem;
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: #475569;
-      letter-spacing: 0.05em;
+    .qr-badge {
+      margin-top: 0.5rem;
+      font-size: 0.625rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #52525b;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 0.25rem;
     }
 
-    /* Mobile Quick Pay Intent Buttons */
+    /* Interactive Actions */
     .mobile-pay-section {
       width: 100%;
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
-      margin-top: 0.5rem;
     }
 
     .btn-primary-intent {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 0.9rem 1.25rem;
-      border-radius: 14px;
-      border: none;
+      background: #ffffff;
+      color: #09090b;
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 0.8125rem 1.25rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.6rem;
+      gap: 0.5rem;
       cursor: pointer;
       text-decoration: none;
-      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-primary-intent:hover {
+      background: #f4f4f5;
+      transform: translateY(-1px);
     }
 
     .btn-primary-intent:active {
-      transform: scale(0.98);
+      transform: translateY(0);
+      background: #e4e4e7;
     }
 
-    /* Quick App Icon Buttons */
+    /* Fast App Selector */
     .app-icons-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.6rem;
-      margin-top: 0.25rem;
+      gap: 0.5rem;
     }
 
     .app-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 0.65rem 0.4rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.35rem;
-      text-decoration: none;
-      color: #e2e8f0;
-      font-size: 0.75rem;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    .app-btn:hover, .app-btn:active {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.15);
-      transform: translateY(-2px);
-    }
-
-    .app-btn-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 0.625rem 0.5rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
+      gap: 0.375rem;
+      text-decoration: none;
+      color: var(--text-secondary);
       font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
     }
 
-    .icon-gpay { background: #fff; color: #1f2937; }
-    .icon-phonepe { background: #5f259f; color: #fff; }
-    .icon-paytm { background: #00baf2; color: #fff; }
+    .app-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
 
-    /* Live SSE Status Bar */
+    .app-btn-tag {
+      font-weight: 600;
+      font-size: 0.6875rem;
+      color: var(--text-tertiary);
+    }
+
+    .desktop-only-help {
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      text-align: center;
+      margin-top: 0.625rem;
+    }
+
+    /* Live SSE Status Bar: Quiet, surgical radar */
     .sse-status-bar {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-top: 1.25rem;
-      padding-top: 0.75rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.75rem;
+      color: var(--text-tertiary);
+      margin-top: 1.375rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
     }
 
-    .pulsing-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--accent);
+    .radar-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-emerald);
       border-radius: 50%;
-      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-      animation: pulse-green 1.6s infinite;
+      position: relative;
     }
 
-    @keyframes pulse-green {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-      70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    .radar-dot::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      border: 1px solid var(--accent-emerald);
+      opacity: 0.8;
+      animation: ripple 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
     }
 
-    /* SUCCESS State Overlay */
+    @keyframes ripple {
+      0% { transform: scale(0.6); opacity: 0.9; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+
+    /* SUCCESS Overlay: Architectural state transition */
     .state-success-overlay {
       display: none;
       position: absolute;
       inset: 0;
-      background: var(--card-bg);
-      border-radius: 24px;
+      background: var(--surface);
+      border-radius: 20px;
       z-index: 50;
-      padding: 2rem;
+      padding: 2.25rem 1.75rem;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      animation: fadeIn 0.4s ease forwards;
+      animation: fadeIn 0.25s ease-out forwards;
     }
 
     .state-success-overlay.visible {
       display: flex;
     }
 
-    .success-checkmark-circle {
-      width: 76px;
-      height: 76px;
-      border-radius: 50%;
-      background: rgba(16, 185, 129, 0.15);
-      border: 2px solid var(--accent);
+    .success-icon-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--accent-emerald-dim);
+      border: 1px solid rgba(16, 185, 129, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--accent);
+      color: var(--accent-emerald);
       margin-bottom: 1.25rem;
-      animation: bounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    @keyframes bounce {
-      0% { transform: scale(0.3); opacity: 0; }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); opacity: 1; }
+    .success-receipt {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 1rem;
+      width: 100%;
+      text-align: left;
+      margin: 1.25rem 0 1.5rem 0;
+      font-size: 0.8125rem;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.96); }
-      to { opacity: 1; transform: scale(1); }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      color: var(--text-tertiary);
     }
 
-    /* EXPIRED State Overlay */
+    .receipt-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .receipt-row strong {
+      color: var(--text-primary);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .receipt-row .utr-code {
+      color: var(--accent-emerald);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    /* EXPIRED Overlay */
     .state-expired-overlay {
       display: none;
       position: absolute;
       inset: 0;
-      background: var(--card-bg);
-      border-radius: 24px;
+      background: var(--surface);
+      border-radius: 20px;
       z-index: 50;
-      padding: 2rem;
+      padding: 2.25rem 1.75rem;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
+      animation: fadeIn 0.25s ease-out forwards;
     }
 
     .state-expired-overlay.visible {
       display: flex;
     }
 
-    /* Mobile Bottom Sheet Media Queries */
+    .expired-icon-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--accent-coral-dim);
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-coral);
+      margin-bottom: 1.25rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Mobile Sheet Adaptation */
     @media (max-width: 640px) {
       body {
         padding: 0;
@@ -435,8 +488,8 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
         border-right: none;
         border-bottom: none;
         padding: 1.5rem 1.25rem 2rem 1.25rem;
-        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
-        animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.7);
+        animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       @keyframes slideUp {
@@ -444,10 +497,9 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
         to { transform: translateY(0); }
       }
 
-      /* Mobile drag handle */
       .sheet-handle {
-        width: 38px;
-        height: 4px;
+        width: 32px;
+        height: 3px;
         background: rgba(255, 255, 255, 0.2);
         border-radius: 99px;
         margin: -0.5rem auto 1.25rem auto;
@@ -463,28 +515,53 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
 
       .qr-toggle-btn {
         background: transparent;
-        border: 1px dashed rgba(255, 255, 255, 0.15);
-        color: var(--text-muted);
-        padding: 0.6rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        padding: 0.625rem;
+        border-radius: 10px;
+        font-size: 0.8125rem;
+        font-weight: 500;
         cursor: pointer;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.875rem;
         width: 100%;
         display: block;
+        transition: all 0.15s ease;
+      }
+
+      .qr-toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: var(--border-strong);
       }
     }
 
     @media (min-width: 641px) {
       .sheet-handle { display: none; }
       .qr-toggle-btn { display: none; }
-      .desktop-only-help {
-        font-size: 0.75rem;
-        color: var(--text-muted);
-        text-align: center;
-        margin-top: 0.5rem;
-      }
+    }
+
+    /* Discreet Developer Utility Dock */
+    .dev-utility-dock {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .dev-sim-btn {
+      background: transparent;
+      border: 1px dashed rgba(255, 255, 255, 0.15);
+      color: var(--text-tertiary);
+      font-size: 0.6875rem;
+      font-weight: 500;
+      padding: 0.375rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      letter-spacing: 0.02em;
+    }
+
+    .dev-sim-btn:hover {
+      border-color: rgba(255, 255, 255, 0.3);
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.02);
     }
   </style>
 </head>
@@ -492,165 +569,155 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
 
   <div class="portal-wrapper">
     <div class="checkout-card" id="checkoutCard">
-      <!-- Mobile drag handle -->
+      <!-- Sheet Handle for Mobile -->
       <div class="sheet-handle"></div>
 
       <!-- Merchant Header -->
       <div class="merchant-header">
-        <div class="merchant-avatar">${data.merchantName.charAt(0).toUpperCase()}</div>
-        <div class="merchant-info">
-          <h1>${data.merchantName}</h1>
-          <div class="vpa-badge">
-            <span>${data.upiVpa}</span>
-            <svg class="verified-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
-            </svg>
+        <div class="merchant-profile">
+          <div class="merchant-avatar">${data.merchantName.charAt(0).toUpperCase()}</div>
+          <div class="merchant-meta">
+            <h1>${data.merchantName}</h1>
+            <div class="vpa-text">${data.upiVpa}</div>
           </div>
         </div>
+
+        <!-- 5-Minute Authoritative Countdown -->
+        <div class="timer-pill" id="timerPill">
+          <span>Expires</span>
+          <strong id="countdownText">05:00</strong>
+        </div>
       </div>
 
-      <!-- Amount Section -->
-      <div class="amount-box">
-        <div class="amount-label">Exact Payable Amount</div>
+      <!-- Amount Hero -->
+      <div class="amount-hero">
+        <div class="amount-caption">Total Amount Due</div>
         <div class="amount-val">
-          <span class="currency">₹</span>
-          <span>${totalRupees.split('.')[0]}</span>
-          <span class="fraction">.${totalRupees.split('.')[1]}</span>
+          <span class="currency-symbol">₹</span>${intPart}<span class="decimal-part">.${decPart}</span>
         </div>
-        <div class="fraction-note">
-          Includes <strong>+₹0.${offsetPaise.toString().padStart(2, '0')}</strong> fractional slot for instant verification
+        <div>
+          <span class="amount-context">
+            Base ₹${baseRupees} + <strong>₹0.${offsetPaise.toString().padStart(2, '0')}</strong> precision match
+          </span>
         </div>
       </div>
 
-      <!-- Server Authoritative Countdown Timer -->
-      <div class="timer-pill" id="timerPill">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-        <span>Expires in: <strong id="countdownText">05:00</strong></span>
-      </div>
-
-      <!-- Vector SVG QR Section -->
+      <!-- Vector SVG QR View -->
       <button class="qr-toggle-btn" id="qrToggleBtn" onclick="toggleQrView()">
-        Show QR Code to Scan
+        Show QR Code
       </button>
 
       <div class="qr-container qr-collapsible" id="qrWrapper">
         ${data.svgQr}
-        <div class="qr-footer-tag">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <div class="qr-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
-          NPCI SECURED UPI QR
+          Direct Bank UPI Transfer
         </div>
       </div>
 
-      <!-- Mobile Intent Buttons -->
+      <!-- Intent Launchers -->
       <div class="mobile-pay-section">
         <a href="${data.upiLinks.generic}" class="btn-primary-intent" id="primaryPayBtn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polygon points="5 3 19 12 5 21 5 3"></polygon>
           </svg>
-          Pay via Any Installed App
+          Pay via Installed UPI App
         </a>
 
         <!-- Fast App Launchers -->
         <div class="app-icons-grid">
           <a href="${data.upiLinks.googlePay}" class="app-btn" title="Pay with Google Pay">
-            <div class="app-btn-icon icon-gpay">G</div>
-            <span>GPay</span>
+            <span class="app-btn-tag">GPay</span>
           </a>
           <a href="${data.upiLinks.phonePe}" class="app-btn" title="Pay with PhonePe">
-            <div class="app-btn-icon icon-phonepe">Pe</div>
-            <span>PhonePe</span>
+            <span class="app-btn-tag">PhonePe</span>
           </a>
           <a href="${data.upiLinks.paytm}" class="app-btn" title="Pay with Paytm">
-            <div class="app-btn-icon icon-paytm">₹</div>
-            <span>Paytm</span>
+            <span class="app-btn-tag">Paytm</span>
           </a>
         </div>
       </div>
 
       <div class="desktop-only-help">
-        Scan using any UPI app: Google Pay, PhonePe, Paytm, CRED, or BHIM.
+        Scan the QR code with GPay, PhonePe, Paytm, or any UPI banking app.
       </div>
 
-      <!-- SSE Live Status Indicator -->
+      <!-- SSE Status Radar -->
       <div class="sse-status-bar" id="sseStatusBar">
-        <span class="pulsing-dot" id="statusDot"></span>
+        <span class="radar-dot" id="statusDot"></span>
         <span id="sseStatusMessage">Awaiting payment confirmation...</span>
       </div>
 
-      <!-- Interactive Sandbox Payment Trigger for Live Testing -->
-      <div style="margin-top: 0.85rem; text-align: center;">
-        <button onclick="simulateBankPayment()" id="simBtn" style="background: rgba(16,185,129,0.12); border: 1px dashed rgba(16,185,129,0.4); color: #34d399; font-size: 0.78rem; font-weight: 600; padding: 0.5rem 0.85rem; border-radius: 10px; cursor: pointer; transition: all 0.2s;">
-          ⚡ [Sandbox Demo] Simulate Bank SMS Credit
-        </button>
-      </div>
-
-      <!-- SUCCESS State Modal/Overlay -->
+      <!-- SUCCESS Overlay -->
       <div class="state-success-overlay" id="successOverlay">
-        <div class="success-checkmark-circle">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <div class="success-icon-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
         </div>
-        <h2 style="font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem;">Payment Successful!</h2>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-          Verified and credited via Bank SMS alert.
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.375rem; letter-spacing: -0.02em;">Payment Verified</h2>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
+          Settlement confirmed via direct bank alert.
         </p>
 
-        <div style="background: rgba(255,255,255,0.04); border-radius: 14px; padding: 1rem; width: 100%; text-align: left; margin-bottom: 1.5rem; font-size: 0.82rem;">
-          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
-            <span style="color: var(--text-muted)">Amount Paid:</span>
-            <strong style="color: #fff">₹${totalRupees}</strong>
+        <div class="success-receipt">
+          <div class="receipt-row">
+            <span>Amount Paid</span>
+            <strong>₹${totalRupees}</strong>
           </div>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
-            <span style="color: var(--text-muted)">Billing Cycle:</span>
-            <strong style="color: #fff">${data.billingCycle}</strong>
+          <div class="receipt-row">
+            <span>Billing Cycle</span>
+            <strong>${data.billingCycle}</strong>
           </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--text-muted)">Bank Ref (UTR):</span>
-            <strong style="color: #38bdf8" id="successUtr">--</strong>
+          <div class="receipt-row">
+            <span>Bank Ref (UTR)</span>
+            <strong class="utr-code" id="successUtr">--</strong>
           </div>
         </div>
 
-        <button onclick="window.close()" class="btn-primary-intent" style="width: 100%; background: #10b981;">
-          Done
+        <button onclick="window.close()" class="btn-primary-intent" style="width: 100%;">
+          Close Receipt
         </button>
       </div>
 
-      <!-- EXPIRED State Overlay -->
+      <!-- EXPIRED Overlay -->
       <div class="state-expired-overlay" id="expiredOverlay">
-        <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(239, 68, 68, 0.15); display: flex; align-items: center; justify-content: center; color: #ef4444; margin-bottom: 1rem;">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="15" y1="9" x2="9" y2="15"></line>
-            <line x1="9" y1="9" x2="15" y2="15"></line>
+        <div class="expired-icon-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </div>
-        <h2 style="font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem;">Session Expired</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
-          The allocated fractional slot timed out. Please regenerate a fresh session to pay safely.
+        <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.375rem; letter-spacing: -0.02em;">Session Timed Out</h2>
+        <p style="font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+          This fractional payment slot has expired. Refresh to generate a new slot.
         </p>
         <button onclick="window.location.reload()" class="btn-primary-intent" style="width: 100%;">
-          Regenerate QR Code
+          Refresh Session
         </button>
       </div>
 
     </div>
+
+    <!-- Discreet Developer Utility -->
+    <div class="dev-utility-dock">
+      <button onclick="simulateBankPayment()" id="simBtn" class="dev-sim-btn">
+        ⚡ Sandbox: Simulate Bank SMS Credit
+      </button>
+    </div>
   </div>
 
   <script>
-    // 1. Mobile QR Toggle
+    // 1. Mobile QR View Toggle
     function toggleQrView() {
       const qrEl = document.getElementById('qrWrapper');
       const btn = document.getElementById('qrToggleBtn');
       if (qrEl.classList.contains('show')) {
         qrEl.classList.remove('show');
-        btn.textContent = 'Show QR Code to Scan';
+        btn.textContent = 'Show QR Code';
       } else {
         qrEl.classList.add('show');
         btn.textContent = 'Hide QR Code';
@@ -694,7 +761,7 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
     updateTimer();
     timerInterval = setInterval(updateTimer, 1000);
 
-    // 3. Server-Sent Events (SSE) Listener for 'SUCCESS' status mutation
+    // 3. Server-Sent Events (SSE) Listener for status mutation
     const sessionId = "${data.sessionId}";
     let eventSource = null;
 
@@ -702,7 +769,6 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
       const sseStatusMsg = document.getElementById('sseStatusMessage');
       const statusDot = document.getElementById('statusDot');
       
-      // Connect to SSE stream
       eventSource = new EventSource('/api/sessions/' + sessionId + '/stream');
 
       eventSource.addEventListener('status', function(event) {
@@ -714,14 +780,12 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
             clearInterval(timerInterval);
             eventSource.close();
             
-            // Populate UTR if present
             if (payload.utr) {
               document.getElementById('successUtr').textContent = payload.utr;
             } else {
               document.getElementById('successUtr').textContent = 'VERIFIED_OK';
             }
 
-            // Reveal Success UI
             document.getElementById('successOverlay').classList.add('visible');
           }
         } catch (e) {
@@ -741,11 +805,11 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
 
     initSseListener();
 
-    // Sandbox simulation trigger
+    // 4. Sandbox simulation trigger
     async function simulateBankPayment() {
       const btn = document.getElementById('simBtn');
       if (btn) {
-        btn.textContent = 'Triggering simulated credit...';
+        btn.textContent = 'Simulating bank credit...';
         btn.disabled = true;
       }
       try {
