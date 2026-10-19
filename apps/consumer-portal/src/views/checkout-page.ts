@@ -28,24 +28,59 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Pay ₹${totalRupees} · ${data.merchantName}</title>
+  <meta name="color-scheme" content="light dark">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #09090b;
-      --surface: #121215;
-      --surface-elevated: #18191f;
-      --border-subtle: rgba(255, 255, 255, 0.07);
-      --border-strong: rgba(255, 255, 255, 0.14);
-      --text-primary: #fafafa;
-      --text-secondary: #a1a1aa;
-      --text-tertiary: #71717a;
-      --accent-emerald: #10b981;
-      --accent-emerald-dim: rgba(16, 185, 129, 0.12);
-      --accent-coral: #f43f5e;
-      --accent-coral-dim: rgba(244, 63, 94, 0.12);
+      /* System Adaptive Palette - Default Light */
+      color-scheme: light dark;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-elevated: #f1f5f9;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.16);
+      --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #64748b;
+      --accent-emerald: #059669;
+      --accent-emerald-dim: rgba(5, 150, 105, 0.1);
+      --accent-coral: #e11d48;
+      --accent-coral-dim: rgba(225, 29, 72, 0.1);
+      --btn-primary-bg: #0f172a;
+      --btn-primary-text: #ffffff;
+      --btn-primary-hover: #1e293b;
+      --qr-border: rgba(0, 0, 0, 0.08);
+      --qr-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+      --receipt-bg: #f8fafc;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        /* System Adaptive Palette - Dark Mode */
+        --bg: #09090b;
+        --surface: #121215;
+        --surface-elevated: #18191f;
+        --border-subtle: rgba(255, 255, 255, 0.07);
+        --border-strong: rgba(255, 255, 255, 0.14);
+        --card-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
+        --text-primary: #fafafa;
+        --text-secondary: #a1a1aa;
+        --text-tertiary: #71717a;
+        --accent-emerald: #10b981;
+        --accent-emerald-dim: rgba(16, 185, 129, 0.12);
+        --accent-coral: #f43f5e;
+        --accent-coral-dim: rgba(244, 63, 94, 0.12);
+        --btn-primary-bg: #ffffff;
+        --btn-primary-text: #09090b;
+        --btn-primary-hover: #f4f4f5;
+        --qr-border: transparent;
+        --qr-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        --receipt-bg: rgba(255, 255, 255, 0.02);
+      }
     }
 
     * {
@@ -67,6 +102,7 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
       padding: 1.5rem 1rem;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     /* Ambient structural surface */
@@ -86,7 +122,8 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
       width: 100%;
       padding: 1.75rem 1.75rem 1.5rem 1.75rem;
       position: relative;
-      box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.03);
+      box-shadow: var(--card-shadow);
+      transition: background-color 0.2s ease, border-color 0.2s ease;
     }
 
     /* Merchant Header: Confident, calm authority */
@@ -231,7 +268,9 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
       margin: 0 auto 1.5rem auto;
       max-width: 230px;
       position: relative;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--qr-border);
+      box-shadow: var(--qr-shadow);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
     .upi-vector-qr {
@@ -261,13 +300,13 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
     }
 
     .btn-primary-intent {
-      background: #ffffff;
-      color: #09090b;
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-text);
       font-weight: 600;
       font-size: 0.875rem;
       padding: 0.8125rem 1.25rem;
       border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--border-strong);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -275,17 +314,17 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
       cursor: pointer;
       text-decoration: none;
       transition: all 0.15s ease;
-      box-shadow: 0 4px 14px rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     }
 
     .btn-primary-intent:hover {
-      background: #f4f4f5;
+      background: var(--btn-primary-hover);
       transform: translateY(-1px);
     }
 
     .btn-primary-intent:active {
       transform: translateY(0);
-      background: #e4e4e7;
+      opacity: 0.95;
     }
 
     /* Fast App Selector */
@@ -296,7 +335,7 @@ export function renderCheckoutHtml(data: CheckoutPageData): string {
     }
 
     .app-btn {
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--surface-elevated);
       border: 1px solid var(--border-subtle);
       border-radius: 10px;
       padding: 0.625rem 0.5rem;

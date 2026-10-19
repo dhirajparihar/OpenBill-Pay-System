@@ -27,23 +27,45 @@ app.get('/', (req: Request, res: Response) => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Merchant Console · Openbill Pay System</title>
+  <meta name="color-scheme" content="light dark">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #09090b;
-      --surface: #121215;
-      --surface-subtle: #18191f;
-      --border-subtle: rgba(255, 255, 255, 0.07);
-      --border-strong: rgba(255, 255, 255, 0.12);
-      --text-primary: #fafafa;
-      --text-secondary: #a1a1aa;
-      --text-tertiary: #71717a;
-      --emerald: #10b981;
-      --emerald-dim: rgba(16, 185, 129, 0.12);
-      --amber: #f59e0b;
+      /* System Adaptive Palette - Default Light */
+      color-scheme: light dark;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(0, 0, 0, 0.14);
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 10px 25px -5px rgba(0, 0, 0, 0.04);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #64748b;
+      --emerald: #059669;
+      --emerald-dim: rgba(5, 150, 105, 0.1);
+      --amber: #d97706;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        /* Dark Mode Tokens */
+        --bg: #09090b;
+        --surface: #121215;
+        --surface-subtle: #18191f;
+        --border-subtle: rgba(255, 255, 255, 0.07);
+        --border-strong: rgba(255, 255, 255, 0.12);
+        --card-shadow: none;
+        --text-primary: #fafafa;
+        --text-secondary: #a1a1aa;
+        --text-tertiary: #71717a;
+        --emerald: #10b981;
+        --emerald-dim: rgba(16, 185, 129, 0.12);
+        --amber: #f59e0b;
+      }
     }
 
     * {
@@ -62,6 +84,7 @@ app.get('/', (req: Request, res: Response) => {
       align-items: center;
       padding: 3rem 1.5rem;
       -webkit-font-smoothing: antialiased;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .console-container {
@@ -134,6 +157,8 @@ app.get('/', (req: Request, res: Response) => {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      box-shadow: var(--card-shadow);
+      transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .metric-caption {
@@ -167,6 +192,8 @@ app.get('/', (req: Request, res: Response) => {
       border: 1px solid var(--border-subtle);
       border-radius: 14px;
       padding: 1.25rem 1.5rem;
+      box-shadow: var(--card-shadow);
+      transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     .system-title {
