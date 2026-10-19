@@ -8,6 +8,14 @@
 [![Monetary Unit](https://img.shields.io/badge/Monetary%20Engine-64--bit%20Integer%20Paise-emerald)](#)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
+| Attribute | Specification |
+| :--- | :--- |
+| **Status** | 🟢 Active / Production Ready |
+| **License** | [MIT License](LICENSE) |
+| **Stack** | Node.js, SQLite (WAL), Puppeteer (CDP), Baileys Socket |
+| **Monetary Precision** | 64-bit Integer (Paise minor units) |
+| **Runtime** | Bare-Metal Node.js 20+ LTS (Zero Docker) |
+
 ---
 
 > [!WARNING]
